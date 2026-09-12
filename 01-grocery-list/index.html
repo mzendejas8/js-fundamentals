@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grocery List</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 420px;
+      margin: 60px auto;
+      color: #222;
+    }
+    h1 { font-size: 20px; }
+    ul { list-style: none; margin: 16px 0 0; padding: 0; }
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-bottom: 1px solid #ddd;
+    }
+    .qty { color: #888; }
+    #count { color: #888; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Grocery List</h1>
+  <ul id="list"></ul>
+  <p id="count"></p>
+
+  <script>
+    // The data. In a real app this might come from a server (that's project
+    // 04 — fetch). Here it's just a hardcoded array so the only thing to
+    // think about is turning data into DOM elements.
+    const GROCERIES = [
+      { name: "Milk", qty: 1 },
+      { name: "Eggs", qty: 12 },
+      { name: "Bread", qty: 2 },
+      { name: "Coffee", qty: 1 },
+      { name: "Bananas", qty: 6 },
+    ];
+
+    // ─────────────────────────────────────────────────────────────
+    // YOUR PART. Turn the GROCERIES array into real <li> elements
+    // inside <ul id="list">. This is the whole lesson: index.html on
+    // disk is just text; the DOM is the live, in-memory tree you
+    // build and change with code, and the page updates to match.
+    //
+    //   1. Grab the list container: document.getElementById("list")
+    //   2. Loop over `items` (a `for...of` loop works well)
+    //   3. For each one, create an element: document.createElement("li")
+    //   4. Give it some text, e.g. `${item.name} — ${item.qty}`,
+    //      by setting li.textContent
+    //   5. Attach it to the list: listEl.appendChild(li)
+    //
+    // Bonus (optional, once the above renders correctly): fill in
+    // <p id="count"> with something like "5 items". Hint: items.length.
+    // ─────────────────────────────────────────────────────────────
+    function renderList(items) {
+     
+      const listEl = document.getElementById("list");
+      const countEl = document.getElementById("count");
+      
+      for (const item of items){
+          const li = document.createElement("li");        
+          li.textContent = `${item.name} — ${item.qty}`;
+          listEl.appendChild(li);
+      }
+        countEl.textContent = `${items.length} items`;
+    }
+    
+    renderList(GROCERIES);
+  </script>
+</body>
+</html>

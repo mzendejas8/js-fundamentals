@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Movie Search</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 420px;
+      margin: 60px auto;
+      color: #222;
+    }
+    h1 { font-size: 20px; }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 16px;
+      padding: 8px 10px;
+      margin-top: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    ul { list-style: none; margin: 16px 0 0; padding: 0; }
+    li { padding: 10px 12px; border-bottom: 1px solid #ddd; }
+    #count { color: #888; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Movie Search</h1>
+  <input type="text" id="search" placeholder="Search movies...">
+  <ul id="results"></ul>
+  <p id="count"></p>
+
+  <script>
+    const MOVIES = [
+      { title: "The Matrix", year: 1999 },
+      { title: "The Matrix Reloaded", year: 2003 },
+      { title: "Inception", year: 2010 },
+      { title: "Interstellar", year: 2014 },
+      { title: "The Dark Knight", year: 2008 },
+      { title: "Pulp Fiction", year: 1994 },
+      { title: "Fight Club", year: 1999 },
+      { title: "Forrest Gump", year: 1994 },
+    ];
+
+    // Finished helper — same DOM-render pattern from 01-grocery-list,
+    // just clearing out the old results first since this runs again
+    // on every keystroke, not once on page load.
+    function renderResults(movies) {
+      const resultsEl = document.getElementById("results");
+      resultsEl.textContent = "";
+      for (const movie of movies) {
+        const li = document.createElement("li");
+        li.textContent = `${movie.title} (${movie.year})`;
+        resultsEl.appendChild(li);
+      }
+      const countEl = document.getElementById("count");
+      countEl.textContent = `${movies.length} result${movies.length === 1 ? "" : "s"}`;
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // YOUR PART. New concept: Array.prototype.filter.
+    //
+    // In 01 you built a new array of DOM elements by hand with a
+    // for...of loop and appendChild. filter() is a different tool:
+    // it takes an existing array and a test function, and hands
+    // back a brand NEW array containing only the elements the test
+    // returned true for — no manual loop, no pushing.
+    //
+    //   someArray.filter(item => /* true to keep it, false to drop it */)
+    //
+    // 1. Return MOVIES.filter(...) — the whole function's job is to
+    //    return that filtered array.
+    // 2. The test: keep a movie if its title contains the query.
+    //    Use movie.title.toLowerCase().includes(query.toLowerCase())
+    //    so the search isn't case-sensitive ("matrix" should still
+    //    find "The Matrix").
+    // ─────────────────────────────────────────────────────────────
+    function filterMovies(query) {
+      // TODO: you
+      return MOVIES.filter(item => item.title.toLocaleLowerCase().includes(query.toLowerCase()));
+    }
+
+    // Finished: wiring up the search box. You already know this
+    // from 02 — an "input" event fires on every keystroke, unlike
+    // "click" which only fires on a click.
+    const searchEl = document.getElementById("search");
+    searchEl.addEventListener("input", () => {
+      const matches = filterMovies(searchEl.value);
+      renderResults(matches);
+    });
+
+    // Initial render: show every movie before the user has typed
+    // anything.
+    renderResults(MOVIES);
+  </script>
+</body>
+</html>

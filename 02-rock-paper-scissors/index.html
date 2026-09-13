@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rock Paper Scissors</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 420px;
+      margin: 60px auto;
+      color: #222;
+      text-align: center;
+    }
+    h1 { font-size: 20px; }
+    #buttons { margin: 20px 0; }
+    button {
+      font-size: 28px;
+      padding: 10px 16px;
+      margin: 0 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fafafa;
+      cursor: pointer;
+    }
+    button:hover { background: #eee; }
+    #result { font-size: 16px; min-height: 24px; margin-top: 16px; }
+    #score { color: #888; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Rock Paper Scissors</h1>
+
+  <div id="buttons">
+    <button id="rock-btn">🪨 Rock</button>
+    <button id="paper-btn">📄 Paper</button>
+    <button id="scissors-btn">✂️ Scissors</button>
+  </div>
+
+  <p id="result"></p>
+  <p id="score">Wins: 0 · Losses: 0 · Ties: 0</p>
+
+  <script>
+    const CHOICES = ["rock", "paper", "scissors"];
+    let wins = 0;
+    let losses = 0;
+    let ties = 0;
+
+    // Finished helper: picks a random choice for the computer.
+    function getComputerChoice() {
+      const index = Math.floor(Math.random() * CHOICES.length);
+      return CHOICES[index];
+    }
+
+    // Finished helper: pure logic, no DOM. Returns "win" | "lose" | "tie"
+    // from the player's point of view.
+    function determineWinner(player, computer) {
+      if (player === computer) return "tie";
+      const beats = { rock: "scissors", paper: "rock", scissors: "paper" };
+      return beats[player] === computer ? "win" : "lose";
+    }
+
+    // Finished helper: updates the running score state + the #score text.
+    function updateScore(outcome) {
+      if (outcome === "win") wins++;
+      else if (outcome === "lose") losses++;
+      else ties++;
+      document.getElementById("score").textContent =
+        `Wins: ${wins} · Losses: ${losses} · Ties: ${ties}`;
+    }
+
+    // Finished helper: plays one round given the player's choice, and
+    // writes the result to #result. This is the DOM-update work you
+    // already know from 01-grocery-list, so it's done for you here —
+    // this project is about wiring up the *events* that call it.
+    function playRound(playerChoice) {
+      const computerChoice = getComputerChoice();
+      const outcome = determineWinner(playerChoice, computerChoice);
+      const verb = outcome === "tie" ? "tied with" : outcome === "win" ? "beat" : "lost to";
+      document.getElementById("result").textContent =
+        `You chose ${playerChoice}, computer chose ${computerChoice} — you ${verb} the computer.`;
+      updateScore(outcome);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // YOUR PART. Right now clicking a button does nothing — nothing
+    // is listening for the click. That's the new concept this project
+    // is about: events. Wire the three buttons up so clicking one
+    // actually calls playRound(...).
+    //
+    //   1. Grab each button: document.getElementById("rock-btn"), etc.
+    //      (three separate consts, one per button)
+    //   2. Attach a listener to each with .addEventListener("click", fn)
+    //      — fn is a function to run when the click happens. An arrow
+    //      function works well here: () => playRound("rock")
+    //   3. Do the same for paper and scissors, passing the matching
+    //      string into playRound.
+    // ─────────────────────────────────────────────────────────────
+    function setupGame() {
+      // 
+      const rock = document.getElementById("rock-btn");
+      const paper = document.getElementById("paper-btn");
+      const scissors = document.getElementById("scissors-btn");
+      
+      rock.addEventListener("click",() => playRound("rock"));
+      paper.addEventListener("click", () => playRound("paper"));
+      scissors.addEventListener("click", () => playRound("scissors"));
+    }
+
+    setupGame();
+  </script>
+</body>
+</html>

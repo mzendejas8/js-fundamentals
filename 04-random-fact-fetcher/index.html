@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Random Fact Fetcher</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 420px;
+      margin: 60px auto;
+      color: #222;
+    }
+    h1 { font-size: 20px; }
+    button {
+      font-size: 16px;
+      padding: 8px 14px;
+      margin-top: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f7f7f7;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; cursor: default; }
+    #fact { margin-top: 16px; line-height: 1.5; }
+    #fact.error { color: #b00020; }
+  </style>
+</head>
+<body>
+  <h1>Random Fact Fetcher</h1>
+  <button id="fetch-btn">Get a random fact</button>
+  <p id="fact">Click the button to fetch a fact.</p>
+
+  <script>
+    // Finished helper — same DOM-update pattern from 01/03, just
+    // swapping text content and toggling an error class.
+    function renderFact(text, isError = false) {
+      const factEl = document.getElementById("fact");
+      factEl.textContent = text;
+      factEl.classList.toggle("error", isError);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // YOUR PART. New concepts: fetch() and async/await.
+    //
+    // fetch(url) starts an HTTP request and returns a Promise — a
+    // placeholder for a value that isn't ready yet. `await` pauses
+    // this function (without freezing the page) until that Promise
+    // resolves, then hands you the real value. That's the whole
+    // trick: write async code that *reads* top-to-bottom like sync
+    // code, instead of nesting .then() callbacks.
+    //
+    // API: https://catfact.ninja/fact — returns JSON shaped like
+    //   { "fact": "Cats have 32 muscles in each ear.", "length": 34 }
+    //
+    // 1. This function is already marked `async` below.
+    // 2. `const response = await fetch("https://catfact.ninja/fact")`
+    //    — response is the HTTP response (status, headers), not the
+    //    data yet.
+    // 3. Check `response.ok` — if false, `throw new Error(...)` so
+    //    the caller's catch block handles it.
+    // 4. `const data = await response.json()` — reading + parsing
+    //    the body is ALSO async, so it needs its own await.
+    // 5. `return data.fact`.
+    // ─────────────────────────────────────────────────────────────
+    async function fetchFact() {
+      // TODO: you
+      const response = await fetch("https://catfact.ninja/fact");
+      
+if (!response.ok) {
+  throw new Error(`Request failed: ${response.status}`);
+}
+      const data = await response.json();
+      
+      return data.fact;
+
+    }
+
+    // Finished: wiring the button up. Loading state + error handling
+    // live here so fetchFact() itself can just focus on getting the
+    // data — that's why it doesn't need its own try/catch.
+    const buttonEl = document.getElementById("fetch-btn");
+    buttonEl.addEventListener("click", async () => {
+      buttonEl.disabled = true;
+      renderFact("Loading...");
+      try {
+        const fact = await fetchFact();
+        renderFact(fact);
+      } catch (err) {
+        renderFact("Couldn't fetch a fact — try again.", true);
+      } finally {
+        buttonEl.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
